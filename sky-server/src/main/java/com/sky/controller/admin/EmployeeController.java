@@ -73,25 +73,37 @@ public class EmployeeController {
     }
 
     @PostMapping()
-    public Result save(@RequestBody EmployeeDTO employeeDTO){
-        if(employeeService.save(employeeDTO)){
+    public Result save(@RequestBody EmployeeDTO employeeDTO) {
+        if (employeeService.save(employeeDTO)) {
             return Result.success();
-        }
-        else return Result.error("添加失败，请重新添加");
+        } else return Result.error("添加失败，请重新添加");
 
     }
 
     @GetMapping("/page")
-    public Result<PageResult> pageQuery(EmployeePageQueryDTO employeePageQueryDTO){
-        PageResult pageResult =  employeeService.pageQuery(employeePageQueryDTO);
+    public Result<PageResult> pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
+        PageResult pageResult = employeeService.pageQuery(employeePageQueryDTO);
         return Result.success(pageResult);
     }
 
     @PostMapping("/status/{status}")
-    public Result updateStatus(Long id,@PathVariable Integer status){
+    public Result updateStatus(Long id, @PathVariable Integer status) {
 
-        if(employeeService.updateStatus(id,status))
+        if (employeeService.updateStatus(id, status))
             return Result.success("设置成功");
         return Result.error("设置失败");
+    }
+
+    @GetMapping("/{id}")
+    public Result<Employee> getById(@PathVariable Long id) {
+        Employee employee = employeeService.getById(id);
+        return Result.success(employee);
+    }
+
+    @PutMapping()
+    public Result updateEmployee(@RequestBody EmployeeDTO employeeDTO){
+        if(employeeService.updateEmployee(employeeDTO))
+        return Result.success("修改成功");
+        else return Result.error("修改失败");
     }
 }
