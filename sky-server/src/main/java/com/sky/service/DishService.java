@@ -12,4 +12,12 @@ public interface DishService {
     void save(DishDTO dishDTO);
 
     PageResult page(DishPageQueryDTO dishPageQueryDTO);
+
+    boolean isOnSale(List<String> ids);
+
+    boolean isInSetMeal(List<String> ids);
+
+    void deleteBatch(List<String> ids);
+
+    DishVO getById(Long id);
 }

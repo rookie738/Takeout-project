@@ -51,4 +51,29 @@ public class DishServiceImpl implements DishService {
         }
 
     }
+
+    @Override
+    public boolean isOnSale(List<String> ids) {
+        if (dishMapper.isOnSale(ids)>0)
+            return true;
+        else return false;
+    }
+
+    @Override
+    public boolean isInSetMeal(List<String> ids) {
+        if (dishMapper.isInSetMeal(ids)>0)
+            return true;
+        return false;
+    }
+
+    @Override
+    public void deleteBatch(List<String> ids) {
+        dishMapper.deleteBatch(ids);
+    }
+
+    @Override
+    public DishVO getById(Long id) {
+        DishVO dishVO =  dishMapper.getById(id);
+        return dishVO;
+    }
 }

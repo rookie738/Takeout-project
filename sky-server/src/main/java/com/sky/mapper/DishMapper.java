@@ -11,6 +11,8 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface DishMapper {
 
@@ -28,4 +30,12 @@ public interface DishMapper {
 
 
     Page<DishVO> page(DishPageQueryDTO dishPageQueryDTO);
+
+    int isOnSale(List<String> ids);
+
+    int isInSetMeal(List<String> ids);
+
+    void deleteBatch(List<String> ids);
+
+    DishVO getById(Long id);
 }

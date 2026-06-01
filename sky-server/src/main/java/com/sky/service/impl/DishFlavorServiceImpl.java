@@ -6,6 +6,8 @@ import com.sky.service.DishFlavorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DishFlavorServiceImpl implements DishFlavorService {
 
@@ -15,5 +17,10 @@ public class DishFlavorServiceImpl implements DishFlavorService {
     @Override
     public void save(DishFlavor dishFlavor) {
         dishFlavorMapper.insert(dishFlavor);
+    }
+
+    @Override
+    public void deleteBatch(List<String> dishIds){
+        dishFlavorMapper.deleteBatch(dishIds);
     }
 }

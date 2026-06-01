@@ -3,11 +3,46 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.DishMapper">
 
+    <resultMap id="DishWithFlavorResultMap" type="com.sky.vo.DishVO" autoMapping="true">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+
+        <result column="category_id" property="categoryId"/>
+        <result column="category_name" property="categoryName"/>  <!-- 直接映射 -->
+
+        <collection property="flavors" ofType="com.sky.entity.DishFlavor">
+            <id column="df_id" property="id"/>      <!-- 只有冲突的改别名 -->
+            <result column="df_name" property="name"/>  <!-- 只有冲突的改别名 -->
+            <result column="value" property="value"/>   <!-- value 不冲突，不用改 -->
+            <result column="dish_id" property="dishId"/>
+        </collection>
+    </resultMap>
+
+    <select id="getById" resultMap="DishWithFlavorResultMap">
+        select
+        d.*,
+        df.id as df_id,      <!-- 只给冲突的 id 起别名 -->
+        df.name as df_name,  <!-- 只给冲突的 name 起别名 -->
+        df.value,            <!-- value 不冲突 -->
+        c.name as category_name
+        from dish d
+        left join dish_flavor df on d.id = df.dish_id
+        left join category c on d.category_id = c.id
+        where d.id = #{id}
+    </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        insert into dish (name,category_id,price,image,description,status,create_time, update_time, create_user, update_user)
-        values (#{name},#{categoryId},#{price},#{image},#{description},#{status}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})
+        insert into dish (name, category_id, price, image, description, status, create_time, update_time, create_user,
+                          update_user)
+        values (#{name}, #{categoryId}, #{price}, #{image}, #{description}, #{status}, #{createTime}, #{updateTime},
+                #{createUser}, #{updateUser})
     </insert>
+    <delete id="deleteBatch">
+        delete from dish where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
     <select id="page" resultType="com.sky.vo.DishVO">
         select dish.*,category.name as categoryName from dish
         join category on dish.category_id = category.id
@@ -24,4 +59,18 @@
         </where>
         order by dish.update_time
     </select>
+    <select id="isOnSale" resultType="java.lang.Integer">
+        select count(*) from dish where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+        and status = 1
+    </select>
+    <select id="isInSetMeal" resultType="java.lang.Integer">
+        select count(*) from setmeal_dish where dish_id in
+        <foreach collection="ids" item="dishId" separator="," open="(" close=")">
+            #{dishId}
+        </foreach>
+    </select>
+
 </mapper>
