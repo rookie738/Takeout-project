@@ -11,4 +11,6 @@ public interface DishFlavorService {
     void save(DishFlavor dishFlavor);
 
     void deleteBatch(List<String> dishIds);
+
+    void update(DishFlavor dishFlavor);
 }

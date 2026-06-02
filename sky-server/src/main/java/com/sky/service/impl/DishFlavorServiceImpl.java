@@ -23,4 +23,9 @@ public class DishFlavorServiceImpl implements DishFlavorService {
     public void deleteBatch(List<String> dishIds){
         dishFlavorMapper.deleteBatch(dishIds);
     }
+
+    @Override
+    public void update(DishFlavor dishFlavor) {
+        dishFlavorMapper.update(dishFlavor);
+    }
 }

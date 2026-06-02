@@ -38,4 +38,7 @@ public interface DishMapper {
     void deleteBatch(List<String> ids);
 
     DishVO getById(Long id);
+
+    @AutoFill(OperationType.UPDATE)
+    void update(Dish dish);
 }

@@ -6,6 +6,10 @@
         insert into dish_flavor (dish_id,name,value)
         values (#{dishId},#{name},#{value})
     </insert>
+    <update id="update">
+        update dish_flavor set name=#{name},value=#{value}
+        where dish_id = #{dishId}
+    </update>
     <delete id="deleteBatch">
         delete from dish_flavor where dish_id in
         <foreach collection="dishIds" item="dishId" separator="," open="(" close=")">

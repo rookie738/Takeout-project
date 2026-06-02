@@ -15,15 +15,16 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class DishServiceImpl implements DishService {
     @Override
     public PageResult page(DishPageQueryDTO dishPageQueryDTO) {
-        PageHelper.startPage(dishPageQueryDTO.getPage(),dishPageQueryDTO.getPageSize());
+        PageHelper.startPage(dishPageQueryDTO.getPage(), dishPageQueryDTO.getPageSize());
         Page<DishVO> page = dishMapper.page(dishPageQueryDTO);
-        return new PageResult(page.getTotal(),page.getResult());
+        return new PageResult(page.getTotal(), page.getResult());
     }
 
     @Autowired
@@ -35,15 +36,15 @@ public class DishServiceImpl implements DishService {
     @Override
     public void save(DishDTO dishDTO) {
         Dish dish = new Dish();
-        BeanUtils.copyProperties(dishDTO,dish);
+        BeanUtils.copyProperties(dishDTO, dish);
         dishMapper.insert(dish);
-        Long id  = dish.getId();
+        Long id = dish.getId();//获得菜品id
         List<DishFlavor> flavors = dishDTO.getFlavors();
         //插入口味
-        if(flavors!=null && flavors.size()>0){
-            //获得菜品id
+        if (flavors != null && flavors.size() > 0) {
 
-            for (DishFlavor dishFlavor:flavors){
+
+            for (DishFlavor dishFlavor : flavors) {
                 dishFlavor.setDishId(id);
                 dishFlavorService.save(dishFlavor);
             }
@@ -54,14 +55,14 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public boolean isOnSale(List<String> ids) {
-        if (dishMapper.isOnSale(ids)>0)
+        if (dishMapper.isOnSale(ids) > 0)
             return true;
         else return false;
     }
 
     @Override
     public boolean isInSetMeal(List<String> ids) {
-        if (dishMapper.isInSetMeal(ids)>0)
+        if (dishMapper.isInSetMeal(ids) > 0)
             return true;
         return false;
     }
@@ -73,7 +74,26 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public DishVO getById(Long id) {
-        DishVO dishVO =  dishMapper.getById(id);
+        DishVO dishVO = dishMapper.getById(id);
         return dishVO;
+    }
+
+    @Override
+    public void update(DishVO dishVO) {
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishVO,dish);
+        dishMapper.update(dish);
+        List id = Collections.singletonList(dish.getId());
+        //先删除原有口味
+        dishFlavorService.deleteBatch(id);
+        Long id2 = dish.getId();
+        //插入口味
+        List<DishFlavor> flavors = dishVO.getFlavors();
+        if (flavors != null && !flavors.isEmpty()) {
+            for (DishFlavor flavor : flavors) {
+                flavor.setDishId(id2);
+                dishFlavorService.save(flavor);
+            }
+        }
     }
 }
