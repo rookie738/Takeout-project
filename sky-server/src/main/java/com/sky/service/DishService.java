@@ -22,4 +22,6 @@ public interface DishService {
     DishVO getById(Long id);
 
     void update(DishVO dishVO);
+
+    void setStatus(int status,Long id);
 }

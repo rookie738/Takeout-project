@@ -47,6 +47,10 @@
         </set>
         where id = #{id}
     </update>
+    <update id="setStatus">
+        update dish set status = #{status}
+        where id = #{id}
+    </update>
 
     <select id="getById" resultMap="DishWithFlavorResultMap">
         select

@@ -96,4 +96,9 @@ public class DishServiceImpl implements DishService {
             }
         }
     }
+
+    @Override
+    public void setStatus(int status,Long id) {
+        dishMapper.setStatus(status,id);
+    }
 }

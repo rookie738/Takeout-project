@@ -41,4 +41,6 @@ public interface DishMapper {
 
     @AutoFill(OperationType.UPDATE)
     void update(Dish dish);
+
+    void setStatus(int status,Long id);
 }
