@@ -13,9 +13,11 @@ import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/admin/dish")
@@ -24,20 +26,26 @@ public class DishController {
     private DishService dishService;
     @Autowired
     private DishFlavorService dishFlavorService;
+    @Autowired
+    private RedisTemplate<Object, Object> redisTemplate;
 
 
+    //新增菜品
     @PostMapping()
     public Result save(@RequestBody DishDTO dishDTO) {
         dishService.save(dishDTO);
+        cleanCache("dish_"+dishDTO.getCategoryId());
         return Result.success();
     }
 
+    //分页查询
     @GetMapping("/page")
     public Result<PageResult> page(DishPageQueryDTO dishPageQueryDTO) {
         PageResult page = dishService.page(dishPageQueryDTO);
         return Result.success(page);
     }
 
+    //批量删除菜品
     @DeleteMapping()
     public Result deleteBatch(@RequestParam List<String> ids) {
 
@@ -52,24 +60,31 @@ public class DishController {
             dishFlavorService.deleteBatch(ids);
 
         }
+        cleanCache("dish_*");
         return Result.success();
     }
 
+    //根据菜品id查询菜品
     @GetMapping("/{id}")
     public Result<DishVO> getById(@PathVariable Long id) {
         DishVO dishVO = dishService.getById(id);
         return Result.success(dishVO);
     }
 
+    //修改菜品
     @PutMapping()
     public Result update(@RequestBody DishVO dishVO) {
         dishService.update(dishVO);
+        cleanCache("dish_*");
         return Result.success();
 
     }
+
+    //设置菜品状态
     @PostMapping("/status/{status}")
     public Result setStatus(@PathVariable int status,@RequestParam Long id){
         dishService.setStatus(status,id);
+        cleanCache("dish_*");
         return Result.success();
     }
 
@@ -84,4 +99,11 @@ public class DishController {
         List<Dish> list = dishService.list(categoryId);
         return Result.success(list);
     }
+
+    //清理缓存
+    private void cleanCache(String pattern){
+        Set keys = redisTemplate.keys(pattern);
+        redisTemplate.delete(keys);
+    }
 }
+
