@@ -41,4 +41,11 @@ public class OrderController {
         return Result.success(orderPaymentVO);
     }
 
+    //催单
+    @GetMapping("/reminder/{id}")
+    public Result reminder(@PathVariable Long id){
+        orderService.reminder(id);
+        return Result.success();
+    }
+
 }
