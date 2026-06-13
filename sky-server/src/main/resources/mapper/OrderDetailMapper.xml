@@ -13,4 +13,6 @@
                 #{orderDetail.dishFlavor},#{orderDetail.number},#{orderDetail.amount})
             </foreach>
     </insert>
+
+
 </mapper>
