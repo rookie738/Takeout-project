@@ -60,3 +60,7 @@ sky:
     refund-notify-url: ${sky.wechat.refund-notify-url}
     mch-serial-no: ${sky.wechat.mch-serial-no}
     we-chat-pay-cert-file-path: ${sky.wechat.we-chat-pay-cert-file-path}
+  shop:
+    address: ${sky.shop.address}
+  baidu:
+    ak: ${sky.baidu.ak}
