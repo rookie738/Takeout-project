@@ -53,7 +53,7 @@ sky:
   wechat:
     appid: ${sky.wechat.appid}
     secret:  ${sky.wechat.secret}
-    mchid:
+    mchid: ${sky.wechat.mchid}
     api-v3-key: ${sky.wechat.api-v3-key}
     notify-url: ${sky.wechat.notify-url}
     private-key-file-path: ${sky.wechat.private-key-file-path}
