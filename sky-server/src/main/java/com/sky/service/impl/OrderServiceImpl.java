@@ -169,10 +169,14 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    //用户催单
     @Override
     public void reminder(Long id) {
         Orders ordersDB = orderMapper.getById(id);
 
+        //校验订单是否存在
+        if (ordersDB==null)
+            throw new  OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
         Map map = new HashMap<>();
         map.put("type", 2);//2表示催单
         map.put("orderId", ordersDB.getId());
